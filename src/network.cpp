@@ -20,9 +20,8 @@ void Network::resize(const size_t& n) {
 
 bool Network::add_link(const size_t& a, const size_t& b) {
 	if ((a < values.size()) and (b < values.size()) and (a != b)) {
-		auto result = links.equal_range(a);
-		for (auto it(result.first); it != result.second; it++) {
-			if (it->second == b) {
+		for (auto nb : neighbors(a)) {
+			if (nb == b) {
 				return false;
 			}
 		}
@@ -40,7 +39,10 @@ size_t Network::random_connect(const double& mean_deg) {
 	for (size_t n(0); n < values.size(); ++n) {
 		size_t tmp(degrees.poisson(mean_deg));
 		for (size_t i(0); i < tmp; ++i) {
-			add_link(n, degrees.uniform_double(0, values.size()-1));
+			size_t random_node(degrees.uniform_double(0, values.size()-1));
+			while (not add_link(n, random_node)) {
+				random_node = degrees.uniform_double(0, values.size()-1);
+			}
 		}
 	}
 	return links.size()/2;
