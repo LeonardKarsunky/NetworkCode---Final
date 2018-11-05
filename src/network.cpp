@@ -5,13 +5,13 @@
 #include <iostream>
 
 void Network::resize(const size_t& n) {
-	values.resize(n);
 	if (n < values.size()) {
 		for (size_t i(n); i < values.size(); ++i) {
 			std::multimap<size_t, size_t>::iterator it = links.find(i);
 			links.erase(it);
 		}
 	}
+	values.resize(n);
 	RandomNumbers tmp;
 	for (size_t i(0); i < values.size(); ++i) {
 		values[i] = tmp.normal(0,1);
@@ -21,9 +21,7 @@ void Network::resize(const size_t& n) {
 bool Network::add_link(const size_t& a, const size_t& b) {
 	if ((a < values.size()) and (b < values.size()) and (a != b)) {
 		for (auto nb : neighbors(a)) {
-			if (nb == b) {
-				return false;
-			}
+			if (nb == b) return false;
 		}
 		links.insert(std::pair<size_t, size_t>(a, b));
 		links.insert(std::pair<size_t, size_t>(b, a));
@@ -34,14 +32,14 @@ bool Network::add_link(const size_t& a, const size_t& b) {
 
 size_t Network::random_connect(const double& mean_deg) {
 	links.clear();
-	RandomNumbers degrees;
+	RandomNumbers RNG;
 	
 	for (size_t n(0); n < values.size(); ++n) {
-		size_t tmp(degrees.poisson(mean_deg));
+		size_t tmp(RNG.poisson(mean_deg));
 		for (size_t i(0); i < tmp; ++i) {
-			size_t random_node(degrees.uniform_double(0, values.size()-1));
+			size_t random_node(RNG.uniform_double(0, values.size()-1));
 			while (not add_link(n, random_node)) {
-				random_node = degrees.uniform_double(0, values.size()-1);
+				random_node = RNG.uniform_double(0, values.size()-1);
 			}
 		}
 	}
@@ -90,11 +88,11 @@ std::vector<double> Network::sorted_values() const {
 }
 
 std::vector<size_t> Network::neighbors(const size_t& n) const {
-	std::vector<size_t> tmp;
+	std::vector<size_t> neighbors;
 	auto result = links.equal_range(n);
 		for (auto it(result.first); it != result.second; it++) {
-			tmp.push_back(it->second);
+			neighbors.push_back(it->second);
 		}
-	return tmp;
+	return neighbors;
 }
 	
