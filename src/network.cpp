@@ -5,16 +5,10 @@
 #include <iostream>
 
 void Network::resize(const size_t& n) {
-	if (n < values.size()) {
-		for (size_t i(n); i < values.size(); ++i) {
-			std::multimap<size_t, size_t>::iterator it = links.find(i);
-			links.erase(it);
-		}
-	}
 	values.resize(n);
-	RandomNumbers tmp;
-	for (size_t i(0); i < values.size(); ++i) {
-		values[i] = tmp.normal(0,1);
+	RandomNumbers RNG;
+	for (size_t i(0); i < n; ++i) {
+		values[i] = RNG.normal(0,1);
 	}
 }
 
