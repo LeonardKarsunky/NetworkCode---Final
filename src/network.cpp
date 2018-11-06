@@ -29,8 +29,8 @@ size_t Network::random_connect(const double& mean_deg) {
 	RandomNumbers RNG;
 
 	for (size_t n(0); n < values.size(); ++n) {
-		size_t tmp(RNG.poisson(mean_deg));
-		for (size_t i(0); i < tmp; ++i) {
+		size_t nb_links(RNG.poisson(mean_deg));
+		for (size_t i(0); i < nb_links; ++i) {
 			size_t random_node(RNG.uniform_double(0, values.size()-1));
 			while (not add_link(n, random_node)) {
 				random_node = RNG.uniform_double(0, values.size()-1);
