@@ -27,7 +27,7 @@ bool Network::add_link(const size_t& a, const size_t& b) {
 size_t Network::random_connect(const double& mean_deg) {
 	links.clear();
 	RandomNumbers RNG;
-	
+
 	for (size_t n(0); n < values.size(); ++n) {
 		size_t tmp(RNG.poisson(mean_deg));
 		for (size_t i(0); i < tmp; ++i) {
